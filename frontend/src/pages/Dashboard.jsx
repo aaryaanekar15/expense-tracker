@@ -89,10 +89,10 @@ function Dashboard() {
     setEditId(exp._id);
   };
 
-  // 🔹 Total Calculation
-  const totalExpense = Array.isArray(expenses)
-    ? expenses.reduce((acc, curr) => acc + Number(curr.amount), 0)
-    : 0;
+  const totalExpense = () => {
+    
+  }
+ 
 
   return (
     <div style={{ padding: "20px", maxWidth: "800px", margin: "auto" }}>
@@ -100,27 +100,7 @@ function Dashboard() {
       {/* 🔹 Title */}
       <h2 style={{ textAlign: "center" }}>Expense Dashboard</h2>
 
-      {/* 🔹 Summary Section */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: "20px",
-          background: "#f5f5f5",
-          padding: "10px",
-          borderRadius: "10px",
-        }}
-      >
-        <div>
-          <h4>Total Expense</h4>
-          <p>₹{totalExpense}</p>
-        </div>
-        <div>
-          <h4>Total Transactions</h4>
-          <p>{expenses.length}</p>
-        </div>
-      </div>
-
+      
       {/* 🔹 Form Section */}
       <div
         style={{
