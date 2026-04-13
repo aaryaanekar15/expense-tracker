@@ -13,7 +13,7 @@ function Login() {
         return;
       }
 
-      const res = await fetch("http://localhost:5000/login", {
+      const res = await fetch("https://expense-tracker-3utg.onrender.com/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -25,7 +25,7 @@ function Login() {
 
       // ✅ FIX: Check token
       if (data.token) {
-        localStorage.setItem("token", data.token); // 🔥 IMPORTANT
+        localStorage.setItem("token", data.token); 
         alert("Login successful");
         navigate("/dashboard"); // match your route
       } else {

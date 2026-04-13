@@ -20,7 +20,7 @@ function Register() {
         return;
       }
 
-      const res = await fetch("http://localhost:5000/register", {
+      const res = await fetch("https://expense-tracker-3utg.onrender.com/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

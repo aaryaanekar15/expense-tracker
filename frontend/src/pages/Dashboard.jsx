@@ -16,7 +16,7 @@ function Dashboard() {
 
   const fetchExpenses = async () => {
     try {
-      const res = await fetch("http://localhost:5000/expenses", {
+      const res = await fetch("https://expense-tracker-3utg.onrender.com/expenses", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -37,7 +37,7 @@ function Dashboard() {
   const handleSubmit = async () => {
     try {
       if (editId) {
-        await fetch(`http://localhost:5000/update/${editId}`, {
+        await fetch(`https://expense-tracker-3utg.onrender.com/update/${editId}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -47,7 +47,7 @@ function Dashboard() {
         });
         setEditId(null);
       } else {
-        await fetch("http://localhost:5000/add-expense", {
+        await fetch("https://expense-tracker-3utg.onrender.com/add-expense", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -67,7 +67,7 @@ function Dashboard() {
   // 🔹 Delete Expense
   const deleteExpense = async (id) => {
     try {
-      await fetch(`http://localhost:5000/delete/${id}`, {
+      await fetch(`https://expense-tracker-3utg.onrender.com/delete/${id}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -90,7 +90,7 @@ function Dashboard() {
   };
 
   const totalExpense = () => {
-    
+
   }
  
 
