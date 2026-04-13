@@ -7,9 +7,9 @@ const Expense = require("./models/Expense");
 const jwt = require("jsonwebtoken");
 const authMiddleware = require("./middleware/auth");
 
-mongoose.connect("mongodb://localhost:27017/expense-tracker")
-    .then(() => console.log("db connected"))
-    .catch((err) => console.log(err));
+mongoose.connect("mongodb://aaryaanekar15:aaryaanekar15@ac-srq3vs0-shard-00-00.qc7wmmr.mongodb.net:27017,ac-srq3vs0-shard-00-01.qc7wmmr.mongodb.net:27017,ac-srq3vs0-shard-00-02.qc7wmmr.mongodb.net:27017/?ssl=true&replicaSet=atlas-12je4a-shard-0&authSource=admin&appName=Cluster0")
+    .then(() => console.log("✅ DB connected"))
+    .catch((err) => console.log("❌ DB error:", err));
 
 const app = express();
 
