@@ -21,22 +21,22 @@ function Register() {
       }
 
       const res = await fetch("https://expense-tracker-3utg.onrender.com/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, email, password }),
-      });
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ name, email, password }),
+});
 
-      const data = await res.json();
+const data = await res.json();
 
-      // ✅ FIX: correct message
-      if (data.message === "user registered sucessfully!") {
-        alert("Registration successful");
-        navigate("/");
-      } else {
-        alert(data.message || "Failed, try again");
-      }
+if (res.ok) {
+  console.log("success", data);
+  alert("Registration successful");
+  navigate("/dashboard");
+} else {
+  alert(data.message || "Failed, try again");
+}
     } catch (error) {
       console.log(error);
       alert("Something went wrong");
