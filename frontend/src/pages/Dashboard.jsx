@@ -89,10 +89,10 @@ function Dashboard() {
     setEditId(exp._id);
   };
 
-const totalExpenses = expenses.reduce(
-  (sum, item) => sum + Number(item.amount),
-  0
-);
+// const totalExpenses = expenses.reduce(
+//   (sum, item) => sum + Number(item.amount),
+//   0
+// );
  
 
   return (
@@ -102,7 +102,7 @@ const totalExpenses = expenses.reduce(
       <h2 style={{ textAlign: "center" }}>Expense Dashboard</h2>
 
 
-      <div 
+      {/* <div 
       style={{textAlign: "center",
       display: "flex",
       justifyContent: "space-between", 
@@ -111,7 +111,7 @@ const totalExpenses = expenses.reduce(
       padding:"5px"}}>
       <p>Total Amount: {totalExpenses}</p>
       <p>Number of Expences: {expenses.length}</p>
-      </div>
+      </div> */}
       {/* 🔹 Form Section */}
       <div
         style={{
