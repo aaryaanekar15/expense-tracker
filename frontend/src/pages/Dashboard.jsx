@@ -145,7 +145,21 @@ function Dashboard() {
   };
 
   return (
-    <div style={{ padding: "20px", maxWidth: "800px", margin: "auto" }}>
+    <div style={{ padding: "20px", margin: "auto",
+       display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+        textAlign: "center",
+
+        backgroundImage: "url('/mainbkg.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+
+        overflow: "hidden",
+     }}>
 
       <h2 style={{ textAlign: "center" }}>Expense Dashboard</h2>
 
@@ -192,7 +206,7 @@ function Dashboard() {
 
       {/* TABLE */}
       <table width="100%" border="1" cellPadding="10">
-        <thead style={{ background: "#ddd" }}>
+        <thead style={{ background: "#beb9cb" }}>
           <tr>
             <th>Amount</th>
             <th>Category</th>

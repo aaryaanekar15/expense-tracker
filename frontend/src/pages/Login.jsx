@@ -49,7 +49,22 @@ function Login() {
   };
 
   return (
-    <div style={{ textAlign: "center", backgroundColor: "beige", padding: "20px" }}>
+    <div 
+    style={{ 
+    display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+        textAlign: "center",
+
+        backgroundImage: "url('/mainbkg.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+
+        overflow: "hidden",
+    }}>
       <h1>EXPENSE TRACKER</h1>
       <h2>Login Page</h2>
 
@@ -59,7 +74,7 @@ function Login() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
-      <br /><br />
+      <br />
 
       <input
         type="password"
@@ -70,8 +85,6 @@ function Login() {
       <br /><br />
 
       <button onClick={handlelogin}>Login</button>
-
-      <hr />
 
       <p>
         Don't have an account?{" "}
