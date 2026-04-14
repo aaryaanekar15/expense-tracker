@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
   const [expenses, setExpenses] = useState([]);
+  const [total, setTotal] = useState(0); // ✅ NEW
   const [form, setForm] = useState({
     amount: "",
     category: "",
@@ -18,14 +18,15 @@ function Dashboard() {
 
     if (!token) {
       alert("Please login first");
-      Navigate("/");
+      navigate("/"); // ✅ FIXED
       return;
     }
 
     fetchExpenses();
+    fetchTotal(); // ✅ NEW
   }, []);
 
-  // ✅ SAFE FETCH
+  // ✅ FETCH EXPENSES
   const fetchExpenses = async () => {
     try {
       const res = await fetch("https://expense-tracker-3utg.onrender.com/expenses", {
@@ -47,10 +48,25 @@ function Dashboard() {
       } else {
         setExpenses([]);
       }
-
     } catch (err) {
       console.log(err);
       setExpenses([]);
+    }
+  };
+
+  // ✅ FETCH TOTAL
+  const fetchTotal = async () => {
+    try {
+      const res = await fetch("https://expense-tracker-3utg.onrender.com/total-expense", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      const data = await res.json();
+      setTotal(data.total || 0);
+    } catch (err) {
+      console.log("Error fetching total:", err);
     }
   };
 
@@ -59,18 +75,15 @@ function Dashboard() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-
   // LOGOUT
   const handleLogout = () => {
-  try {
-    localStorage.removeItem("token");
-    localStorage.clear();
-    navigate("/login");
-  } catch (err) {
-    console.log("Logout error:", err);
-  }
-};
-
+    try {
+      localStorage.clear();
+      navigate("/login");
+    } catch (err) {
+      console.log("Logout error:", err);
+    }
+  };
 
   // ✅ ADD / UPDATE
   const handleSubmit = async () => {
@@ -98,7 +111,7 @@ function Dashboard() {
 
       setForm({ amount: "", category: "", date: "" });
       fetchExpenses();
-
+      fetchTotal(); // ✅ UPDATE TOTAL
     } catch (err) {
       console.log(err);
     }
@@ -113,13 +126,13 @@ function Dashboard() {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
+
       fetchExpenses();
+      fetchTotal(); // ✅ UPDATE TOTAL
     } catch (err) {
       console.log(err);
     }
   };
-
-
 
   // ✅ EDIT
   const editExpense = (exp) => {
@@ -136,14 +149,18 @@ function Dashboard() {
 
       <h2 style={{ textAlign: "center" }}>Expense Dashboard</h2>
 
+      {/* ✅ TOTAL DISPLAY */}
+      <h3 style={{ textAlign: "center", marginTop: "10px" }}>
+        Total Expenses: ₹{total}
+      </h3>
+
       {/* FORM */}
       <div
         style={{
           marginTop: "20px",
           marginBottom: "20px",
           display: "flex",
-          justifyContent:"space-between",
-          
+          justifyContent: "space-between",
           gap: "10px",
           flexWrap: "wrap",
         }}
@@ -208,7 +225,18 @@ function Dashboard() {
           )}
         </tbody>
       </table>
-      <button style={{marginTop:"10px",cursor:"pointer",borderRadius:"5px", backgroundColor:"#9a9898"}} onClick={handleLogout}> LOGOUT</button>
+
+      <button
+        style={{
+          marginTop: "10px",
+          cursor: "pointer",
+          borderRadius: "5px",
+          backgroundColor: "#9a9898",
+        }}
+        onClick={handleLogout}
+      >
+        LOGOUT
+      </button>
     </div>
   );
 }
