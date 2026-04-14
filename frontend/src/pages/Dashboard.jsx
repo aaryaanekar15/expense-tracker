@@ -8,6 +8,7 @@ function Dashboard() {
     date: "",
   });
   const [editId, setEditId] = useState(null);
+  const [total, setTotal] = useState(0);
 
   // 🔹 Fetch Expenses on Load
   useEffect(() => {
@@ -79,6 +80,29 @@ function Dashboard() {
     }
   };
 
+
+//  const fetchTotalExpense = async () => {
+//   try {
+//     const res = await fetch("https://expense-tracker-3utg.onrender.com/total-expense", {
+//       method: "GET",
+//       headers: {
+//         Authorization: `Bearer ${localStorage.getItem("token")}`
+//       }
+//     });
+
+//     const data = await res.json();
+//     setTotal(data.total);
+//   } catch (error) {
+//     console.log("Error fetching total:", error);
+//   } 
+// };
+
+//  useEffect(() => {
+//   fetchExpenses();        // your existing function
+//   fetchTotalExpense();    // NEW
+// }, []);
+
+
   // 🔹 Edit Expense
   const editExpense = (exp) => {
     setForm({
@@ -88,11 +112,6 @@ function Dashboard() {
     });
     setEditId(exp._id);
   };
-
-// const totalExpenses = expenses.reduce(
-//   (sum, item) => sum + Number(item.amount),
-//   0
-// );
  
 
   return (
@@ -101,17 +120,10 @@ function Dashboard() {
       {/* 🔹 Title */}
       <h2 style={{ textAlign: "center" }}>Expense Dashboard</h2>
 
-
-      {/* <div 
-      style={{textAlign: "center",
-      display: "flex",
-      justifyContent: "space-between", 
-      background:"#f7f2f2 ",
-      borderRadius:"10px",
-      padding:"5px"}}>
-      <p>Total Amount: {totalExpenses}</p>
-      <p>Number of Expences: {expenses.length}</p>
+      {/* <div>
+        <p>Total Expenses: ₹ {total} </p>
       </div> */}
+
       {/* 🔹 Form Section */}
       <div
         style={{
