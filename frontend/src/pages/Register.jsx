@@ -33,7 +33,7 @@ const data = await res.json();
 if (res.ok) {
   console.log("success", data);
   alert("Registration successful");
-  navigate("/dashboard");
+  navigate("/login");
 } else {
   alert(data.message || "Failed, try again");
 }
