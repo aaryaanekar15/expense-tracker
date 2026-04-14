@@ -16,7 +16,7 @@ function Dashboard() {
 
     if (!token) {
       alert("Please login first");
-      Navigate("/login");
+      Navigate("/");
       return;
     }
 
