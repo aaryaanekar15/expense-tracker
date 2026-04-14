@@ -8,13 +8,21 @@ function Dashboard() {
     date: "",
   });
   const [editId, setEditId] = useState(null);
-  const [total, setTotal] = useState(0);
 
-  // 🔹 Fetch Expenses on Load
+  // ✅ CHECK LOGIN + FETCH
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Please login first");
+      window.location.href = "/login";
+      return;
+    }
+
     fetchExpenses();
   }, []);
 
+  // ✅ SAFE FETCH
   const fetchExpenses = async () => {
     try {
       const res = await fetch("https://expense-tracker-3utg.onrender.com/expenses", {
@@ -22,19 +30,33 @@ function Dashboard() {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
+
+      if (!res.ok) {
+        console.log("Error:", res.status);
+        setExpenses([]);
+        return;
+      }
+
       const data = await res.json();
-      setExpenses(data);
+
+      if (Array.isArray(data)) {
+        setExpenses(data);
+      } else {
+        setExpenses([]);
+      }
+
     } catch (err) {
       console.log(err);
+      setExpenses([]);
     }
   };
 
-  // 🔹 Handle Input
+  // ✅ HANDLE INPUT
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // 🔹 Add / Update Expense
+  // ✅ ADD / UPDATE
   const handleSubmit = async () => {
     try {
       if (editId) {
@@ -60,12 +82,13 @@ function Dashboard() {
 
       setForm({ amount: "", category: "", date: "" });
       fetchExpenses();
+
     } catch (err) {
       console.log(err);
     }
   };
 
-  // 🔹 Delete Expense
+  // ✅ DELETE
   const deleteExpense = async (id) => {
     try {
       await fetch(`https://expense-tracker-3utg.onrender.com/delete/${id}`, {
@@ -80,30 +103,7 @@ function Dashboard() {
     }
   };
 
-
-//  const fetchTotalExpense = async () => {
-//   try {
-//     const res = await fetch("https://expense-tracker-3utg.onrender.com/total-expense", {
-//       method: "GET",
-//       headers: {
-//         Authorization: `Bearer ${localStorage.getItem("token")}`
-//       }
-//     });
-
-//     const data = await res.json();
-//     setTotal(data.total);
-//   } catch (error) {
-//     console.log("Error fetching total:", error);
-//   } 
-// };
-
-//  useEffect(() => {
-//   fetchExpenses();        // your existing function
-//   fetchTotalExpense();    // NEW
-// }, []);
-
-
-  // 🔹 Edit Expense
+  // ✅ EDIT
   const editExpense = (exp) => {
     setForm({
       amount: exp.amount,
@@ -112,27 +112,20 @@ function Dashboard() {
     });
     setEditId(exp._id);
   };
- 
 
   return (
     <div style={{ padding: "20px", maxWidth: "800px", margin: "auto" }}>
 
-      {/* 🔹 Title */}
       <h2 style={{ textAlign: "center" }}>Expense Dashboard</h2>
 
-      {/* <div>
-        <p>Total Expenses: ₹ {total} </p>
-      </div> */}
-
-      {/* 🔹 Form Section */}
+      {/* FORM */}
       <div
         style={{
-          marginTop:"20px",
+          marginTop: "20px",
           marginBottom: "20px",
           display: "flex",
           gap: "10px",
           flexWrap: "wrap",
-          textAlign: "center",
         }}
       >
         <input
@@ -160,7 +153,7 @@ function Dashboard() {
         </button>
       </div>
 
-      {/* 🔹 Expense Table */}
+      {/* TABLE */}
       <table width="100%" border="1" cellPadding="10">
         <thead style={{ background: "#ddd" }}>
           <tr>
@@ -172,7 +165,7 @@ function Dashboard() {
         </thead>
 
         <tbody>
-          {expenses.length === 0 ? (
+          {!Array.isArray(expenses) || expenses.length === 0 ? (
             <tr>
               <td colSpan="4" style={{ textAlign: "center" }}>
                 No expenses found

@@ -21,16 +21,27 @@ function Login() {
         body: JSON.stringify({ email, password }),
       });
 
+      // ✅ check if response is valid
+      if (!res.ok) {
+        alert("Login failed");
+        return;
+      }
+
       const data = await res.json();
 
-      // ✅ FIX: Check token
+      // ✅ SAVE TOKEN (MOST IMPORTANT)
       if (data.token) {
-        localStorage.setItem("token", data.token); 
+        localStorage.setItem("token", data.token);
+
+        console.log("Saved Token:", data.token); // debug
+
         alert("Login successful");
-        navigate("/dashboard"); // match your route
+
+        navigate("/dashboard");
       } else {
         alert(data.message || "Invalid credentials");
       }
+
     } catch (error) {
       console.log(error);
       alert("Something went wrong!");
@@ -38,20 +49,22 @@ function Login() {
   };
 
   return (
-    <div style={{ textAlign: "center", backgroundColor: "beige" }}>
+    <div style={{ textAlign: "center", backgroundColor: "beige", padding: "20px" }}>
       <h1>EXPENSE TRACKER</h1>
       <h2>Login Page</h2>
 
       <input
         type="email"
-        placeholder="email"
+        placeholder="Email"
+        value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
       <br /><br />
 
       <input
         type="password"
-        placeholder="password"
+        placeholder="Password"
+        value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
       <br /><br />

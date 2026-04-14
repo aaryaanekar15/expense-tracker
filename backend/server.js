@@ -183,21 +183,19 @@ app.put("/update/:id", authMiddleware, async (req, res) => {
 });
 
 
-// app.get("/total-expense", authMiddleware, async (req, res) => {
-//     try {
-//         const expenses = await Expense.find({ userId: req.userId });
+app.get("/total-expense", authMiddleware, async (req, res) => {
+  try {
+    const expenses = await Expense.find({ userId: req.userId });
 
-//         const total = expenses.reduce((sum, item) => {
-//             return sum + item.amount;
-//         }, 0);
+    const total = expenses.reduce((sum, item) => {
+      return sum + Number(item.amount); // ✅ FIX
+    }, 0);
 
-//         res.json({ total });
-
-//     } catch (error) {
-//         res.json({ error: error.message });
-//     }
-// });
-
+    res.json({ total });
+  } catch (error) {
+    res.json({ error: error.message });
+  }
+});
 
 // DELETE EXPENSE
 app.delete("/delete/:id", authMiddleware, async (req, res) => {
