@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
   const [expenses, setExpenses] = useState([]);
@@ -9,6 +10,7 @@ function Dashboard() {
     date: "",
   });
   const [editId, setEditId] = useState(null);
+  const navigate = useNavigate();
 
   // ✅ CHECK LOGIN + FETCH
   useEffect(() => {
@@ -57,6 +59,19 @@ function Dashboard() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+
+  // LOGOUT
+  const handleLogout = () => {
+  try {
+    localStorage.removeItem("token");
+    localStorage.clear();
+    navigate("/login");
+  } catch (err) {
+    console.log("Logout error:", err);
+  }
+};
+
+
   // ✅ ADD / UPDATE
   const handleSubmit = async () => {
     try {
@@ -104,6 +119,8 @@ function Dashboard() {
     }
   };
 
+
+
   // ✅ EDIT
   const editExpense = (exp) => {
     setForm({
@@ -125,6 +142,8 @@ function Dashboard() {
           marginTop: "20px",
           marginBottom: "20px",
           display: "flex",
+          justifyContent:"space-between",
+          
           gap: "10px",
           flexWrap: "wrap",
         }}
@@ -189,6 +208,7 @@ function Dashboard() {
           )}
         </tbody>
       </table>
+      <button style={{marginTop:"10px",cursor:"pointer",borderRadius:"5px", backgroundColor:"#9a9898"}} onClick={handleLogout}> LOGOUT</button>
     </div>
   );
 }
