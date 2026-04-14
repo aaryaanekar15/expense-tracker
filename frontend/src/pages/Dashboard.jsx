@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 
 function Dashboard() {
   const [expenses, setExpenses] = useState([]);
@@ -15,7 +16,7 @@ function Dashboard() {
 
     if (!token) {
       alert("Please login first");
-      window.location.href = "/login";
+      Navigate("/login");
       return;
     }
 
