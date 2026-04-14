@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
   const [expenses, setExpenses] = useState([]);
-  const [total, setTotal] = useState(0); // ✅ NEW
+  const [total, setTotal] = useState(0); 
   const [form, setForm] = useState({
     amount: "",
     category: "",
@@ -18,15 +18,15 @@ function Dashboard() {
 
     if (!token) {
       alert("Please login first");
-      navigate("/"); // ✅ FIXED
+      navigate("/"); 
       return;
     }
 
     fetchExpenses();
-    fetchTotal(); // ✅ NEW
+    fetchTotal(); 
   }, []);
 
-  // ✅ FETCH EXPENSES
+  //  FETCH EXPENSES
   const fetchExpenses = async () => {
     try {
       const res = await fetch("https://expense-tracker-3utg.onrender.com/expenses", {
@@ -54,7 +54,7 @@ function Dashboard() {
     }
   };
 
-  // ✅ FETCH TOTAL
+  //  FETCH TOTAL
   const fetchTotal = async () => {
     try {
       const res = await fetch("https://expense-tracker-3utg.onrender.com/total-expense", {
@@ -70,7 +70,7 @@ function Dashboard() {
     }
   };
 
-  // ✅ HANDLE INPUT
+  //  HANDLE INPUT
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -85,7 +85,7 @@ function Dashboard() {
     }
   };
 
-  // ✅ ADD / UPDATE
+  //  ADD / UPDATE
   const handleSubmit = async () => {
     try {
       if (editId) {
@@ -111,13 +111,13 @@ function Dashboard() {
 
       setForm({ amount: "", category: "", date: "" });
       fetchExpenses();
-      fetchTotal(); // ✅ UPDATE TOTAL
+      fetchTotal(); 
     } catch (err) {
       console.log(err);
     }
   };
 
-  // ✅ DELETE
+  // DELETE
   const deleteExpense = async (id) => {
     try {
       await fetch(`https://expense-tracker-3utg.onrender.com/delete/${id}`, {
@@ -128,13 +128,13 @@ function Dashboard() {
       });
 
       fetchExpenses();
-      fetchTotal(); // ✅ UPDATE TOTAL
+      fetchTotal(); //  UPDATE TOTAL
     } catch (err) {
       console.log(err);
     }
   };
 
-  // ✅ EDIT
+  // EDIT
   const editExpense = (exp) => {
     setForm({
       amount: exp.amount,
@@ -149,7 +149,7 @@ function Dashboard() {
 
       <h2 style={{ textAlign: "center" }}>Expense Dashboard</h2>
 
-      {/* ✅ TOTAL DISPLAY */}
+      {/*  TOTAL DISPLAY */}
       <h3 style={{ textAlign: "center", marginTop: "10px" }}>
         Total Expenses: ₹{total}
       </h3>
