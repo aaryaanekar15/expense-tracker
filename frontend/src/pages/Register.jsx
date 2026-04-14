@@ -44,7 +44,19 @@ if (res.ok) {
   };
 
   return (
-    <div style={{ textAlign: "center", backgroundColor: "beige" }}>
+    <div style={{ textAlign: "center", display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+        textAlign: "center",
+
+        backgroundImage: "url('/mainbkg.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+
+        overflow: "hidden", }}>
       <h2>Registration Page</h2>
 
       <input
