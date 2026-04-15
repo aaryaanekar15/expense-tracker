@@ -1,9 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handlelogin = async () => {
@@ -13,6 +20,8 @@ function Login() {
         return;
       }
 
+      setLoading(true); // START LOADING
+
       const res = await fetch("https://expense-tracker-3utg.onrender.com/login", {
         method: "POST",
         headers: {
@@ -21,22 +30,16 @@ function Login() {
         body: JSON.stringify({ email, password }),
       });
 
-      // ✅ check if response is valid
       if (!res.ok) {
         alert("Login failed");
+        setLoading(false); // STOP LOADING
         return;
       }
 
       const data = await res.json();
 
-      // ✅ SAVE TOKEN (MOST IMPORTANT)
       if (data.token) {
         localStorage.setItem("token", data.token);
-
-        console.log("Saved Token:", data.token); // debug
-
-        alert("Login successful");
-
         navigate("/dashboard");
       } else {
         alert(data.message || "Invalid credentials");
@@ -45,56 +48,72 @@ function Login() {
     } catch (error) {
       console.log(error);
       alert("Something went wrong!");
+    } finally {
+      setLoading(false); // ALWAYS STOP
     }
   };
 
   return (
-    <div 
-    style={{ 
-    display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        textAlign: "center",
+    <div
+      className="h-screen flex items-center justify-center bg-cover bg-center"
+      style={{ backgroundColor: "black" }}
+    >
+      <Card className="w-[380px] shadow-xl bg-white/90 backdrop-blur-md">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl font-bold">
+            Expense Tracker
+          </CardTitle>
+          <p className="text-sm text-gray-500">Login to continue</p>
+        </CardHeader>
 
-        backgroundImage: "url('/mainbkg.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
+        <CardContent className="space-y-4">
 
-        overflow: "hidden",
-    }}>
-      <h1>EXPENSE TRACKER</h1>
-      <h2>Login Page</h2>
+          <div className="space-y-2">
+            <Label>Email</Label>
+            <Input
+              type="email"
+              placeholder="Enter email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={loading} // disable input
+            />
+          </div>
 
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <br />
+          <div className="space-y-2">
+            <Label>Password</Label>
+            <Input
+              type="password"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={loading} // disable input
+            />
+          </div>
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <br /><br />
+          {/* BUTTON WITH LOADING */}
+          <Button
+            className="w-full flex items-center justify-center gap-2"
+            onClick={handlelogin}
+            disabled={loading}
+          >
+            {loading && (
+              <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+            )}
+            {loading ? "Logging in..." : "Login"}
+          </Button>
 
-      <button onClick={handlelogin}>Login</button>
+          <p className="text-center text-sm">
+            Don’t have an account?{" "}
+            <span
+              onClick={() => !loading && navigate("/register")}
+              className="text-blue-600 cursor-pointer hover:underline"
+            >
+              Register
+            </span>
+          </p>
 
-      <p>
-        Don't have an account?{" "}
-        <span
-          onClick={() => navigate("/register")}
-          style={{ color: "blue", cursor: "pointer" }}
-        >
-          Register
-        </span>
-      </p>
+        </CardContent>
+      </Card>
     </div>
   );
 }

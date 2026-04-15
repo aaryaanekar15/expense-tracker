@@ -1,28 +1,43 @@
+
 import { useNavigate } from "react-router-dom";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 function Main() {
   const navigate = useNavigate();
 
   return (
     <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-        textAlign: "center",
-
-        backgroundImage: "url('/mainbkg.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-
-        overflow: "hidden",
-      }}
+      className="h-screen flex items-center justify-center bg-cover bg-center"
+      style={{ backgroundColor:"black" }}
     >
-      <h2>Welcome to Expense Tracker</h2>
-      <button onClick={() => navigate("/login")}>Start Tracking!</button>
+      <Card className="w-[420px] text-center shadow-xl bg-white/90 backdrop-blur-md">
+        
+        <CardHeader>
+          <CardTitle className="text-3xl font-bold">
+            Expense Tracker
+          </CardTitle>
+          <p className="text-gray-600 text-sm mt-2">
+            Track your expenses smartly & stay in control 💰
+          </p>
+        </CardHeader>
+
+        <CardContent className="space-y-4">
+          
+          <Button
+            className="w-full text-lg"
+            onClick={() => navigate("/login")}
+          >
+            Start Tracking
+          </Button>
+
+          <p className="text-xs text-gray-500">
+            Simple • Fast • Clean Finance Tracker
+          </p>
+
+        </CardContent>
+      </Card>
     </div>
   );
 }

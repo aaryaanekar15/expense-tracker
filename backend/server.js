@@ -188,7 +188,7 @@ app.get("/total-expense", authMiddleware, async (req, res) => {
     const expenses = await Expense.find({ userId: req.userId });
 
     const total = expenses.reduce((sum, item) => {
-      return sum + Number(item.amount); // ✅ FIX
+      return sum + Number(item.amount); 
     }, 0);
 
     res.json({ total });
