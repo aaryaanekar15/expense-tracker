@@ -18,7 +18,6 @@ app.use(express.json());
 // OPTIONAL (prevents buffering issues)
 mongoose.set("bufferCommands", false);
 
-// MongoDB Connection String (ADD DB NAME HERE)
 const MONGO_URI = "mongodb://aaryaanekar15:aaryaanekar15@ac-srq3vs0-shard-00-00.qc7wmmr.mongodb.net:27017,ac-srq3vs0-shard-00-01.qc7wmmr.mongodb.net:27017,ac-srq3vs0-shard-00-02.qc7wmmr.mongodb.net:27017/expenseDB?ssl=true&replicaSet=atlas-12je4a-shard-0&authSource=admin&appName=Cluster0";
 
 // CONNECT DB FIRST, THEN START SERVER
