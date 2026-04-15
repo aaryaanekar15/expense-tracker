@@ -181,7 +181,7 @@ function ManageEx() {
           <div className="bg-white p-4 rounded-xl shadow">
             <h3 className="font-semibold mb-3">All Expenses</h3>
 
-            <div className="overflow-auto max-h-100">
+            <div className="overflow-auto max-h-[400px]">
               <table className="w-full text-sm border">
                 <thead className="bg-gray-100 sticky top-0">
                   <tr>

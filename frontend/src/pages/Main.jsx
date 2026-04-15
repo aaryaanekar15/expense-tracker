@@ -12,7 +12,7 @@ function Main() {
       className="h-screen flex items-center justify-center bg-cover bg-center"
       style={{ backgroundColor:"black" }}
     >
-      <Card className="w-105 text-center shadow-xl bg-white/90 backdrop-blur-md">
+      <Card className="w-[420px] text-center shadow-xl bg-white/90 backdrop-blur-md">
         
         <CardHeader>
           <CardTitle className="text-3xl font-bold">

@@ -131,7 +131,7 @@ function Dashboard() {
               onClick={() => navigate("/trackex")}
               className="flex items-center gap-4 p-4 sm:p-5 rounded-2xl border border-gray-200 bg-white text-left w-full hover:bg-gray-50 transition group"
             >
-              <div className="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center text-lg shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-violet-100 flex items-center justify-center text-lg flex-shrink-0">
                 📈
               </div>
               <div className="flex-1 min-w-0">
@@ -146,7 +146,7 @@ function Dashboard() {
               onClick={() => navigate("/manageex")}
               className="flex items-center gap-4 p-4 sm:p-5 rounded-2xl border border-gray-200 bg-white text-left w-full hover:bg-gray-50 transition group"
             >
-              <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-lg shrink-0">
+              <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-lg flex-shrink-0">
                 📋
               </div>
               <div className="flex-1 min-w-0">
@@ -203,7 +203,7 @@ function Dashboard() {
                     <div key={i} className="flex items-center justify-between text-sm">
                       <div className="flex items-center gap-2">
                         <span
-                          className="w-2.5 h-2.5 rounded-full shrink-0"
+                          className="w-2.5 h-2.5 rounded-full flex-shrink-0"
                           style={{ background: COLORS[i % COLORS.length] }}
                         />
                         <span className="text-gray-600">{entry.name}</span>
