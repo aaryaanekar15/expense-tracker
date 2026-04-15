@@ -58,7 +58,7 @@ function Login() {
       className="h-screen flex items-center justify-center bg-cover bg-center"
       style={{ backgroundColor: "black" }}
     >
-      <Card className="w-[380px] shadow-xl bg-white/90 backdrop-blur-md">
+      <Card className="w-95 shadow-xl bg-white/90 backdrop-blur-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">
             Expense Tracker
