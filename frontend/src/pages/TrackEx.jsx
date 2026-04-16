@@ -10,9 +10,12 @@ function TrackEx() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const settingsRef = useRef(null);
 
-  //  FILTER STATES
+  // FILTER STATES
   const [categoryFilter, setCategoryFilter] = useState("");
-  const [dateFilter, setDateFilter] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [minAmount, setMinAmount] = useState("");
+  const [maxAmount, setMaxAmount] = useState("");
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -35,17 +38,23 @@ function TrackEx() {
   }, []);
 
   const fetchExpenses = async () => {
-    const res = await fetch("https://expense-tracker-3utg.onrender.com/expenses", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
+    const res = await fetch(
+      "https://expense-tracker-3utg.onrender.com/expenses",
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      },
+    );
     const data = await res.json();
     setExpenses(Array.isArray(data) ? data : []);
   };
 
   const fetchTotal = async () => {
-    const res = await fetch("https://expense-tracker-3utg.onrender.com/total-expense", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    });
+    const res = await fetch(
+      "https://expense-tracker-3utg.onrender.com/total-expense",
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      },
+    );
     const data = await res.json();
     setTotal(data.total || 0);
   };
@@ -55,24 +64,46 @@ function TrackEx() {
     navigate("/login");
   };
 
+  // UNIQUE CATEGORIES (NEW)
+  const categories = useMemo(() => {
+    return [...new Set(expenses.map((e) => e.category))];
+  }, [expenses]);
+
   // FILTERED DATA
   const filteredExpenses = useMemo(() => {
     return expenses.filter((e) => {
+      const amount = Number(e.amount);
+      const date = e.date?.split("T")[0];
+
       const matchCategory = categoryFilter
-        ? e.category.toLowerCase().includes(categoryFilter.toLowerCase())
+        ? e.category === categoryFilter
         : true;
 
-      const matchDate = dateFilter ? e.date === dateFilter : true;
+      const matchStartDate = startDate ? date >= startDate : true;
+      const matchEndDate = endDate ? date <= endDate : true;
 
-      return matchCategory && matchDate;
+      const matchMinAmount = minAmount ? amount >= Number(minAmount) : true;
+      const matchMaxAmount = maxAmount ? amount <= Number(maxAmount) : true;
+
+      return (
+        matchCategory &&
+        matchStartDate &&
+        matchEndDate &&
+        matchMinAmount &&
+        matchMaxAmount
+      );
     });
-  }, [expenses, categoryFilter, dateFilter]);
+  }, [expenses, categoryFilter, startDate, endDate, minAmount, maxAmount]);
 
-   const handleHome = async() => {
+  const handleHome = async () => {
     await navigate("/dashboard");
-  }
+  };
 
-  //  PIE DATA BASED ON FILTER
+  const handleManage = async () => {
+    await navigate("/manageex");
+  };
+
+  // PIE DATA
   const pieData = useMemo(() => {
     const map = {};
     filteredExpenses.forEach((e) => {
@@ -85,10 +116,22 @@ function TrackEx() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-100 text-gray-900">
-
       {/* NAVBAR */}
       <nav className="bg-black text-white px-4 sm:px-6 h-14 flex items-center justify-between relative z-50">
-        <span className="text-lg font-semibold cursor-pointer" onClick={handleHome}>Expense Tracker</span>
+        <div className="flex gap-6">
+          <span
+            className="text-lg font-semibold cursor-pointer"
+            onClick={handleHome}
+          >
+            Home
+          </span>
+          <span
+            className="text-lg font-semibold cursor-pointer"
+            onClick={handleManage}
+          >
+            Manage Expenses
+          </span>
+        </div>
 
         <div ref={settingsRef} className="relative">
           <button
@@ -111,33 +154,64 @@ function TrackEx() {
         </div>
       </nav>
 
-        <h2 className="text-center font-bold text-xl border-4 outline-2">Track Expenses</h2>
-
+      <h2 className="text-center font-bold text-xl border-4 outline-2">
+        Track Expenses
+      </h2>
 
       {/* MAIN */}
       <main className="flex-1 w-full max-w-6xl mx-auto px-4 py-6">
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-          {/* ✅ LEFT SIDE → TABLE */}
+          {/* LEFT SIDE → TABLE */}
           <div className="bg-white p-4 rounded-xl shadow">
-
             <h3 className="font-semibold mb-3">Expenses</h3>
 
             {/* FILTERS */}
-            <div className="flex flex-col sm:flex-row gap-2 mb-4">
-              <input
-                type="text"
-                placeholder="Filter by category"
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
+
+              {/* CATEGORY DROPDOWN */}
+              <select
                 value={categoryFilter}
                 onChange={(e) => setCategoryFilter(e.target.value)}
                 className="border px-2 py-1 rounded w-full"
+              >
+                <option value="">All Categories</option>
+                {categories.map((cat, i) => (
+                  <option key={i} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+<br></br>
+              {/* DATE RANGE */}
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="border px-2 py-1 rounded"
               />
 
               <input
                 type="date"
-                value={dateFilter}
-                onChange={(e) => setDateFilter(e.target.value)}
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="border px-2 py-1 rounded"
+              />
+
+              {/* AMOUNT RANGE */}
+              <input
+                type="number"
+                placeholder="Min Amount Range"
+                value={minAmount}
+                onChange={(e) => setMinAmount(e.target.value)}
+                className="border px-2 py-1 rounded"
+              />
+
+              <input
+                type="number"
+                placeholder="Max Amount Range"
+                value={maxAmount}
+                onChange={(e) => setMaxAmount(e.target.value)}
                 className="border px-2 py-1 rounded"
               />
             </div>
@@ -165,7 +239,9 @@ function TrackEx() {
                       <tr key={exp._id}>
                         <td className="p-2 border">₹{exp.amount}</td>
                         <td className="p-2 border">{exp.category}</td>
-                        <td className="p-2 border">{exp.date?.split("T")[0]}</td>
+                        <td className="p-2 border">
+                          {exp.date?.split("T")[0]}
+                        </td>
                       </tr>
                     ))
                   )}
@@ -174,7 +250,7 @@ function TrackEx() {
             </div>
           </div>
 
-          {/*  RIGHT SIDE → CHART */}
+          {/* RIGHT SIDE → CHART */}
           <div className="bg-white p-4 rounded-xl shadow">
             <h3 className="font-semibold mb-3">Expense Breakdown</h3>
 
@@ -198,7 +274,7 @@ function TrackEx() {
 
         </div>
       </main>
-      {/* FOOTER */}
+
       <footer className="text-center py-4 text-xs text-gray-400 border-t border-gray-200">
         Track expenses fast and securely
       </footer>

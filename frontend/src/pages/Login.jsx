@@ -38,7 +38,7 @@ function Login() {
 
       const data = await res.json();
 
-      if (data.token) {
+      if (data.token) { 
         localStorage.setItem("token", data.token);
         
         navigate("/dashboard");

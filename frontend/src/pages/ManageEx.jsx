@@ -5,6 +5,9 @@ function ManageEx() {
   const navigate = useNavigate();
 
   const [expenses, setExpenses] = useState([]);
+  const [categories, setCategories] = useState([]); 
+  const [newCategory, setNewCategory] = useState(""); 
+
   const [form, setForm] = useState({
     amount: "",
     category: "",
@@ -43,6 +46,10 @@ function ManageEx() {
     );
     const data = await res.json();
     setExpenses(Array.isArray(data) ? data : []);
+
+    // AUTO EXTRACT CATEGORIES FROM EXPENSES (NEW)
+    const unique = [...new Set(data.map((e) => e.category))];
+    setCategories((prev) => [...new Set([...prev, ...unique])]);
   };
 
   const handleLogout = () => {
@@ -50,12 +57,10 @@ function ManageEx() {
     navigate("/login");
   };
 
-  // HANDLE INPUT
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  // ADD OR UPDATE
   const handleSubmit = async () => {
     if (!form.amount || !form.category || !form.date) {
       alert("All fields required");
@@ -82,11 +87,10 @@ function ManageEx() {
     fetchExpenses();
   };
 
-  const handleHome = async() => {
+  const handleHome = async () => {
     await navigate("/dashboard");
-  }
+  };
 
-  // DELETE
   const handleDelete = async (id) => {
     await fetch(`https://expense-tracker-3utg.onrender.com/delete/${id}`, {
       method: "DELETE",
@@ -95,7 +99,10 @@ function ManageEx() {
     fetchExpenses();
   };
 
-  // EDIT
+  const handleTrack = async () => {
+    await navigate("/trackex");
+  };
+
   const handleEdit = (exp) => {
     setForm({
       amount: exp.amount,
@@ -105,11 +112,33 @@ function ManageEx() {
     setEditId(exp._id);
   };
 
+  // ADD CATEGORY (NEW)
+  const handleAddCategory = () => {
+    if (!newCategory.trim()) return;
+    if (!categories.includes(newCategory)) {
+      setCategories([...categories, newCategory]);
+    }
+    setNewCategory("");
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-gray-100 text-gray-900">
       {/* NAVBAR */}
       <nav className="bg-black text-white px-4 sm:px-6 h-14 flex items-center justify-between relative">
-        <span className="text-lg font-semibold cursor-pointer" onClick={handleHome}>Expense Tracker</span>
+        <div className="flex gap-6">
+          <span
+            className="text-lg font-semibold cursor-pointer"
+            onClick={handleHome}
+          >
+            Home
+          </span>
+          <span
+            className="text-lg font-semibold cursor-pointer"
+            onClick={handleTrack}
+          >
+            Track Expenses
+          </span>
+        </div>
 
         <div ref={settingsRef} className="relative">
           <button
@@ -131,10 +160,15 @@ function ManageEx() {
           )}
         </div>
       </nav>
-    <h2 className="text-center font-bold text-xl border-4 outline-2">Manage Expenses</h2>
+
+      <h2 className="text-center font-bold text-xl border-4 outline-2">
+        Manage Expenses
+      </h2>
+
       {/* MAIN */}
       <main className="flex-1 w-full max-w-6xl mx-auto px-4 py-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
           {/* LEFT → FORM */}
           <div className="bg-white p-5 rounded-xl shadow flex flex-col gap-3">
             <h3 className="font-semibold">
@@ -150,14 +184,20 @@ function ManageEx() {
               className="border p-2 rounded"
             />
 
-            <input
-              type="text"
+            {/* CATEGORY DROPDOWN (UPDATED) */}
+            <select
               name="category"
-              placeholder="Category"
               value={form.category}
               onChange={handleChange}
               className="border p-2 rounded"
-            />
+            >
+              <option value="">Select Category</option>
+              {categories.map((cat, i) => (
+                <option key={i} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
 
             <input
               type="date"
@@ -175,9 +215,29 @@ function ManageEx() {
             >
               {editId ? "Update" : "Add"}
             </button>
+
+            {/* ADD CATEGORY UI (NEW) */}
+            <div className="mt-4 border-t pt-3">
+              <h4 className="text-sm font-semibold mb-2">Add Category</h4>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  placeholder="New category"
+                  value={newCategory}
+                  onChange={(e) => setNewCategory(e.target.value)}
+                  className="border p-2 rounded w-full"
+                />
+                <button
+                  onClick={handleAddCategory}
+                  className="bg-green-500 text-white px-3 rounded"
+                >
+                  Add
+                </button>
+              </div>
+            </div>
           </div>
 
-          {/*  RIGHT → TABLE */}
+          {/* RIGHT → TABLE */}
           <div className="bg-white p-4 rounded-xl shadow">
             <h3 className="font-semibold mb-3">All Expenses</h3>
 
@@ -204,7 +264,9 @@ function ManageEx() {
                       <tr key={exp._id}>
                         <td className="p-2 border">₹{exp.amount}</td>
                         <td className="p-2 border">{exp.category}</td>
-                        <td className="p-2 border">{exp.date?.split("T")[0]}</td>
+                        <td className="p-2 border">
+                          {exp.date?.split("T")[0]}
+                        </td>
                         <td className="p-2 border flex gap-2 justify-center">
                           <button
                             onClick={() => handleEdit(exp)}
@@ -227,9 +289,10 @@ function ManageEx() {
               </table>
             </div>
           </div>
+
         </div>
       </main>
-      {/* FOOTER */}
+
       <footer className="text-center py-4 text-xs text-gray-400 border-t border-gray-200">
         Track expenses fast and securely
       </footer>

@@ -136,7 +136,7 @@ function Dashboard() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="font-medium text-sm cursor-pointer">Track expenses</div>
-                <div className="text-xs mt-0.5 text-gray-500">Add and record new entries</div>
+                <div className="text-xs mt-0.5 text-gray-500">Track and record new entries</div>
               </div>
               <span className="text-lg text-gray-400 transition group-hover:translate-x-1">›</span>
             </button>
