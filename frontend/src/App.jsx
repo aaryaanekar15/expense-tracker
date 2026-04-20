@@ -6,6 +6,8 @@ import Dashboard from "./pages/Dashboard";
 import Main from "./pages/Main";
 import TrackEx from './pages/TrackEx';
 import ManageEx from './pages/ManageEx';
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   return (
@@ -19,6 +21,8 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/trackex" element={<TrackEx />} />
         <Route path="/manageex" element={<ManageEx />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
       </Routes>
     </BrowserRouter>
   );

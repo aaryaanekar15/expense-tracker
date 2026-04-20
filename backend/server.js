@@ -8,6 +8,9 @@ const User = require("./models/Users");
 const Expense = require("./models/Expense");
 const authMiddleware = require("./middleware/auth");
 
+const crypto = require("crypto");
+const nodemailer = require("nodemailer");
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -15,30 +18,27 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// OPTIONAL (prevents buffering issues)
 mongoose.set("bufferCommands", false);
 
 const MONGO_URI = "mongodb://aaryaanekar15:aaryaanekar15@ac-srq3vs0-shard-00-00.qc7wmmr.mongodb.net:27017,ac-srq3vs0-shard-00-01.qc7wmmr.mongodb.net:27017,ac-srq3vs0-shard-00-02.qc7wmmr.mongodb.net:27017/expenseDB?ssl=true&replicaSet=atlas-12je4a-shard-0&authSource=admin&appName=Cluster0";
 
-// CONNECT DB FIRST, THEN START SERVER
 const startServer = async () => {
     try {
         await mongoose.connect(MONGO_URI);
-        console.log("✅ DB connected");
+        console.log(" DB connected");
 
         app.listen(PORT, () => {
-            console.log(`🚀 Server running on port ${PORT}`);
+            console.log(` Server running on port ${PORT}`);
         });
 
     } catch (err) {
-        console.log("❌ DB error:", err);
+        console.log(" DB error:", err);
     }
 };
 
 startServer();
 
 
-// ================= ROUTES ================= //
 
 // Test route
 app.get("/", (req, res) => {
@@ -195,6 +195,78 @@ app.get("/total-expense", authMiddleware, async (req, res) => {
     res.json({ error: error.message });
   }
 });
+
+
+// FORGOT PASSWORD
+app.post("/forgot-password", async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.json({ message: "User not found" });
+        }
+
+        const token = crypto.randomBytes(32).toString("hex");
+
+        user.resetToken = token;
+        user.resetTokenExpiry = Date.now() + 10 * 60 * 1000; // 10 min
+        await user.save();
+
+        const resetLink = `https://expenses-tracker-aarya.vercel.app/reset-password/${token}`;
+
+        // EMAIL CONFIG
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                user: "aaryaanekar15@gmail.com",
+                pass: "vsym rkqv wfte pssd"
+            }
+        });
+
+        await transporter.sendMail({
+            to: user.email,
+            subject: "Password Reset",
+            text: `Click here to reset your password: ${resetLink}`
+        });
+
+        res.json({ message: "Reset link sent to email" });
+
+    } catch (error) {
+        res.json({ error: error.message });
+    }
+});
+
+
+app.post("/reset-password/:token", async (req, res) => {
+    try {
+        const { token } = req.params;
+        const { password } = req.body;
+
+        const user = await User.findOne({
+            resetToken: token,
+            resetTokenExpiry: { $gt: Date.now() }
+        });
+
+        if (!user) {
+            return res.json({ message: "Invalid or expired token" });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        user.password = hashedPassword;
+        user.resetToken = undefined;
+        user.resetTokenExpiry = undefined;
+
+        await user.save();
+
+        res.json({ message: "Password reset successful" });
+
+    } catch (error) {
+        res.json({ error: error.message });
+    }
+});
+
 
 // DELETE EXPENSE
 app.delete("/delete/:id", authMiddleware, async (req, res) => {

@@ -22,13 +22,16 @@ function Login() {
 
       setLoading(true); // START LOADING
 
-      const res = await fetch("https://expense-tracker-3utg.onrender.com/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const res = await fetch(
+        "https://expense-tracker-3utg.onrender.com/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email, password }),
         },
-        body: JSON.stringify({ email, password }),
-      });
+      );
 
       if (!res.ok) {
         alert("Login failed");
@@ -38,14 +41,13 @@ function Login() {
 
       const data = await res.json();
 
-      if (data.token) { 
+      if (data.token) {
         localStorage.setItem("token", data.token);
-        
+
         navigate("/dashboard");
       } else {
         alert(data.message || "Invalid credentials");
       }
-
     } catch (error) {
       console.log(error);
       alert("Something went wrong!");
@@ -61,14 +63,11 @@ function Login() {
     >
       <Card className="w-[380px] shadow-xl bg-white/90 backdrop-blur-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">
-            Expense Tracker
-          </CardTitle>
+          <CardTitle className="text-2xl font-bold">Expense Tracker</CardTitle>
           <p className="text-sm text-gray-500">Login to continue</p>
         </CardHeader>
 
         <CardContent className="space-y-4">
-
           <div className="space-y-2">
             <Label>Email</Label>
             <Input
@@ -112,7 +111,12 @@ function Login() {
               Register
             </span>
           </p>
-
+          <p
+            onClick={() => navigate("/forgot-password")}
+            className="text-sm text-blue-600 cursor-pointer hover:underline text-right"
+          >
+            Forgot Password?
+          </p>
         </CardContent>
       </Card>
     </div>
