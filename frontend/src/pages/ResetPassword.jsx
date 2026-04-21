@@ -19,7 +19,7 @@ function ResetPassword() {
   };
 
   return (
-    <div className="h-screen flex justify-center items-center">
+    <div className="h-screen flex justify-center items-center bg-black">
       <div className="p-6 bg-white shadow rounded">
         <h2 className="text-xl mb-4">Reset Password</h2>
 

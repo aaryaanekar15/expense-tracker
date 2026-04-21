@@ -17,7 +17,7 @@ function ForgotPassword() {
   };
 
   return (
-    <div className="h-screen flex justify-center items-center">
+    <div className="h-screen flex justify-center items-center bg-black">
       <div className="p-6 bg-white shadow rounded">
         <h2 className="text-xl mb-4">Forgot Password</h2>
 
@@ -28,7 +28,7 @@ function ForgotPassword() {
           onChange={(e) => setEmail(e.target.value)}
         />
 
-        <button onClick={handleSubmit} className="bg-blue-500 text-white p-2 w-full cursor-pointer">
+        <button onClick={handleSubmit} className="bg-blue-500 text-white p-2 w-full cursor-pointer ">
           Send Reset Link
         </button>
       </div>
